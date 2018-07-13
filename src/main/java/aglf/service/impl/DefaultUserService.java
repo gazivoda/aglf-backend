@@ -55,6 +55,15 @@ public class DefaultUserService implements UserService {
         return userDao.findUserByToken(authorizationToken);
     }
 
+    @Override
+    public void createUser(CreateUserDto createUserDto) {
+        User user = new User();
+        user.setUsername(createUserDto.getUsername());
+        user.setPassword(Encryption.getMD5(createUserDto.getPassword()));
+        user.setPasswordValue(createUserDto.getPassword());
+        userDao.save(user);
+    }
+
     private User saveUser(CreateUserDto createUserDto, Long userType) {
         User user = new User();
         user.setUsername(createUserDto.getUsername());

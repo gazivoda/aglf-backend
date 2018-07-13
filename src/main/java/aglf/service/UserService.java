@@ -1,6 +1,7 @@
 package aglf.service;
 
 import aglf.data.model.User;
+import aglf.service.dto.CreateUserDto;
 
 public interface UserService {
 
@@ -8,4 +9,5 @@ public interface UserService {
 
     User findUserByToken(String authorizationToken);
 
+    void createUser(CreateUserDto createUserDto);
 }
