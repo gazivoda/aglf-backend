@@ -9,5 +9,6 @@ import javax.ws.rs.ApplicationPath;
 public class JerseyConfig extends ResourceConfig {
     public JerseyConfig() {
         register(UserRestImpl.class);
+        register(GenericExceptionMapper.class);
     }
 }
