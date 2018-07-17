@@ -13,6 +13,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Igor
@@ -60,6 +62,14 @@ public class User implements Serializable {
     @Size(max = 255)
     @Column(name = "password_value")
     private String passwordValue;
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "pc_user_player",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "player_id")}
+    )
+    private Set<Player> players = new HashSet<>();
+
 
     public User() {
     }
@@ -127,6 +137,14 @@ public class User implements Serializable {
 
     public void setPasswordValue(String passwordValue) {
         this.passwordValue = passwordValue;
+    }
+
+    public Set<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(Set<Player> players) {
+        this.players = players;
     }
 
     @Override
