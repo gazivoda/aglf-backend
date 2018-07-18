@@ -32,4 +32,11 @@ public class PlayerRest {
         playerService.setPlayers(playersListDto);
     }
 
+    @GET
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path("/getTeam")
+    public List<PlayerDto> getTeam(@QueryParam("userId") Long userId) {
+        return playerService.getTeam(userId);
+    }
+
 }

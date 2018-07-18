@@ -37,6 +37,8 @@ public class Player implements Serializable {
     @NotNull
     @Column(name = "position")
     private Position position;
+    @Column(name = "price", nullable = false)
+    private Integer price = 0;
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Team team;
@@ -79,6 +81,14 @@ public class Player implements Serializable {
 
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     @Override

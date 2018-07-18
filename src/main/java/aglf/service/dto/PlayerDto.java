@@ -8,6 +8,7 @@ public class PlayerDto {
     private String firstName;
     private String lastName;
     private Player.Position position;
+    private Integer price;
     private String teamName;
     private Long teamId;
 
@@ -57,5 +58,13 @@ public class PlayerDto {
 
     public void setTeamId(Long teamId) {
         this.teamId = teamId;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 }
