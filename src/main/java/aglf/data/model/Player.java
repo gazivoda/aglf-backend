@@ -35,8 +35,14 @@ public class Player implements Serializable {
     @Column(name = "last_name")
     private String lastName;
     @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "photo_url")
+    private String photoUrl;
+    @NotNull
     @Column(name = "position")
     private Position position;
+    @Column(name = "number", nullable = false)
+    private Integer number = 0;
     @Column(name = "price", nullable = false)
     private Integer price = 0;
     @JoinColumn(name = "team_id", referencedColumnName = "id")
@@ -89,6 +95,22 @@ public class Player implements Serializable {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
     @Override
