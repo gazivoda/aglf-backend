@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package aglf.data.model;
 
 import org.hibernate.annotations.SQLDelete;
@@ -16,9 +11,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author Igor
- */
 @Entity
 @Table(name = "pc_user")
 //Override the default Hibernation delete and set the deleted flag rather than deleting the record from the db.
@@ -62,6 +54,8 @@ public class User implements Serializable {
     @Size(max = 255)
     @Column(name = "password_value")
     private String passwordValue;
+    @Column(name = "price", nullable = false)
+    private Long score = 0L;
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "pc_user_player",
@@ -69,6 +63,7 @@ public class User implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "player_id")}
     )
     private Set<Player> players = new HashSet<>();
+
 
 
     public User() {
@@ -145,6 +140,14 @@ public class User implements Serializable {
 
     public void setPlayers(Set<Player> players) {
         this.players = players;
+    }
+
+    public Long getScore() {
+        return score;
+    }
+
+    public void setScore(Long score) {
+        this.score = score;
     }
 
     @Override

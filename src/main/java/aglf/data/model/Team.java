@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package aglf.data.model;
 
 import javax.persistence.*;
@@ -11,9 +6,6 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * @author Igor
- */
 @Entity
 @Table(name = "pc_team")
 public class Team implements Serializable {
