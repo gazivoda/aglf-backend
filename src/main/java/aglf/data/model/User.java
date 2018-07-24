@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -56,14 +55,8 @@ public class User implements Serializable {
     private String passwordValue;
     @Column(name = "price", nullable = false)
     private Long score = 0L;
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "pc_user_player",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "player_id")}
-    )
-    private Set<Player> players = new HashSet<>();
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    private Set<UserPlayer> userPlayers;
 
 
     public User() {
@@ -134,12 +127,12 @@ public class User implements Serializable {
         this.passwordValue = passwordValue;
     }
 
-    public Set<Player> getPlayers() {
-        return players;
+    public Set<UserPlayer> getUserPlayers() {
+        return userPlayers;
     }
 
-    public void setPlayers(Set<Player> players) {
-        this.players = players;
+    public void setUserPlayers(Set<UserPlayer> userPlayers) {
+        this.userPlayers = userPlayers;
     }
 
     public Long getScore() {

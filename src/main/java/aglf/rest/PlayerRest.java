@@ -1,7 +1,6 @@
 package aglf.rest;
 
 import aglf.service.PlayerService;
-import aglf.service.dto.PlayersListDto;
 import aglf.service.dto.PlayerDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,8 +27,8 @@ public class PlayerRest {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/setPlayers")
-    public void setPlayers(PlayersListDto playersListDto) {
-        playerService.setPlayers(playersListDto);
+    public void setPlayers(List<PlayerDto> players) {
+        playerService.setPlayers(players);
     }
 
     @GET

@@ -3,10 +3,10 @@ package aglf.service;
 import aglf.data.dao.PlayerDao;
 import aglf.data.dao.UserDao;
 import aglf.data.model.User;
+import aglf.data.model.UserPlayer;
 import aglf.rest.filter.CustomAutentication;
 import aglf.service.assembler.PlayerAssembler;
 import aglf.service.dto.PlayerDto;
-import aglf.service.dto.PlayersListDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -29,16 +29,24 @@ public class PlayerService {
         return playerDao.findAll().stream().map(PlayerAssembler::getPlayerDto).collect(Collectors.toList());
     }
 
-    public void setPlayers(PlayersListDto playersListDto) {
+    public void setPlayers(List<PlayerDto> players) {
         User user = userDao.findById(((CustomAutentication) SecurityContextHolder.getContext().getAuthentication()).getPrincipal().getUserId());
         if (user == null) {
             throw new WebApplicationException("User not found");
         }
         // TODO validate user list
 
-        user.getPlayers().clear();
-        for (Long playerId : playersListDto.getPlayerIds()) {
-            user.getPlayers().add(playerDao.loadById(playerId));
+        user.getUserPlayers().clear();
+        for (PlayerDto player : players) {
+
+            UserPlayer up = new UserPlayer();
+            up.setUser(user);
+            up.setPlayer(playerDao.loadById(player.getId()));
+            up.setActive(player.getActive() != null ? player.getActive() : false);
+            up.setCaptain(player.getCaptain() != null ? player.getCaptain() : false);
+            up.setViceCaptain(player.getViceCaptain() != null ? player.getViceCaptain() : false);
+
+            user.getUserPlayers().add(up);
         }
 
     }
@@ -52,6 +60,6 @@ public class PlayerService {
         if (user == null) {
             throw new WebApplicationException("User not found");
         }
-        return user.getPlayers().stream().map(PlayerAssembler::getPlayerDto).collect(Collectors.toList());
+        return user.getUserPlayers().stream().map(PlayerAssembler::getPlayerDto).collect(Collectors.toList());
     }
 }
