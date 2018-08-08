@@ -55,11 +55,10 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     }
 
     private boolean shouldFilter(String url) {
-        if (!url.contains("/login") || !url.contains("/signUp")) {
-            return true;
+        if (url.contains("/login") || url.contains("/signUp")) {
+            return false;
         }
-
-        return false;
+        return true;
     }
 }
 
