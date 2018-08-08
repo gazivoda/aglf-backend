@@ -2,7 +2,9 @@ package aglf.data.dao.impl;
 
 import aglf.data.dao.MatchPlayerStatDao;
 import aglf.data.dao.commons.HbmGenericDaoBase;
+import aglf.data.model.Match;
 import aglf.data.model.MatchPlayerStat;
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 
@@ -13,4 +15,11 @@ public class HbmMatchPlayerStatDao extends HbmGenericDaoBase<Long, MatchPlayerSt
         super(MatchPlayerStat.class);
     }
 
+    @Override
+    public MatchPlayerStat findByMatch(Match match) {
+        String hql = "from MatchPlayerStat where match = :match";
+        Query query = getSession().createQuery(hql);
+        query.setEntity("match", match);
+        return (MatchPlayerStat) query.list();
+    }
 }

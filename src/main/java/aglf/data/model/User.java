@@ -53,11 +53,12 @@ public class User implements Serializable {
     @Size(max = 255)
     @Column(name = "password_value")
     private String passwordValue;
-    @Column(name = "price", nullable = false)
-    private Long score = 0L;
+    @Column(name = "score", nullable = false)
+    private Double score = 0d;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<UserPlayer> userPlayers;
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    private Set<ScoreHistory> scoreHistory;
 
     public User() {
     }
@@ -135,12 +136,24 @@ public class User implements Serializable {
         this.userPlayers = userPlayers;
     }
 
-    public Long getScore() {
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Double getScore() {
         return score;
     }
 
-    public void setScore(Long score) {
+    public void setScore(Double score) {
         this.score = score;
+    }
+
+    public Set<ScoreHistory> getScoreHistory() {
+        return scoreHistory;
+    }
+
+    public void setScoreHistory(Set<ScoreHistory> scoreHistory) {
+        this.scoreHistory = scoreHistory;
     }
 
     @Override
