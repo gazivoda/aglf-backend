@@ -21,25 +21,27 @@ public class Player implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
-    @NotNull
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "first_name")
     private String firstName;
-    @NotNull
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "last_name")
     private String lastName;
-    @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "photo_url")
     private String photoUrl;
-    @NotNull
     @Column(name = "position")
     private Position position;
     @Column(name = "number", nullable = false)
     private Integer number = 0;
     @Column(name = "price", nullable = false)
     private Integer price = 0;
+    @Size(max = 255)
+    @Column(name = "date_of_birth")
+    private String dateOfBirth;
+    @Size(max = 255)
+    @Column(name = "external_id")
+    private String externalId;
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Team team;
@@ -106,6 +108,22 @@ public class Player implements Serializable {
 
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     @Override

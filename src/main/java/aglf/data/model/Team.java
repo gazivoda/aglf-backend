@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,9 +20,7 @@ public class Team implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "name")
     private String name;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "manager_name")
     private String managerName;
     @Size(max = 255)
@@ -29,8 +28,17 @@ public class Team implements Serializable {
     private String stadium;
     @Column(name = "capacity")
     private Integer capacity;
+    @Size(max = 255)
+    @Column(name = "city")
+    private String city;
+    @Size(max = 255)
+    @Column(name = "external_id")
+    private String externalId;
+    @Size(max = 255)
+    @Column(name = "abbreviation")
+    private String abbreviation;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "team", orphanRemoval = true)
-    private List<Player> players;
+    private List<Player> players = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -78,6 +86,30 @@ public class Team implements Serializable {
 
     public void setPlayers(List<Player> players) {
         this.players = players;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
+    public String getAbbreviation() {
+        return abbreviation;
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
     }
 
     @Override
