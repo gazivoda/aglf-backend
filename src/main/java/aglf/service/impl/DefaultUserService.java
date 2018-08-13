@@ -57,6 +57,9 @@ public class DefaultUserService implements UserService {
 
     @Override
     public void createUser(CreateUserDto createUserDto) {
+        if (userDao.findByUsername(createUserDto.getUsername()) != null) {
+            throw new WebApplicationException("User with that username/email already exists");
+        }
         User user = new User();
         user.setUsername(createUserDto.getUsername());
         user.setPassword(Encryption.getMD5(createUserDto.getPassword()));
