@@ -5,4 +5,6 @@ import aglf.data.model.Match;
 
 public interface MatchDao extends AbstractDao<Long, Match> {
 
+    Match findByExternalId(String externalId);
+
 }

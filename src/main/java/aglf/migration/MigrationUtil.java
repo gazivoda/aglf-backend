@@ -1,22 +1,31 @@
 package aglf.migration;
 
+import aglf.data.dao.MatchDao;
 import aglf.data.dao.TeamDao;
+import aglf.data.model.Match;
 import aglf.data.model.Team;
 import aglf.service.RestClient;
 import aglf.service.dto.restmapping.team.Player;
 import aglf.service.dto.restmapping.team.TeamProfile;
+import aglf.service.dto.restmapping.tournamentschedule.Competitor;
+import aglf.service.dto.restmapping.tournamentschedule.Sport_event;
 import aglf.service.dto.restmapping.tournamentschedule.TournamentSchedule;
+import aglf.util.ConstantManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Random;
 
 @Service
 @Transactional
 public class MigrationUtil {
+
+    private static final Logger logger = Logger.getLogger(MigrationUtil.class);
 
     @Value("#{'${competitors.list}'.split(',')}")
     private List<String> COMPETITORS_LIST;
@@ -25,6 +34,8 @@ public class MigrationUtil {
     private RestClient restClient;
     @Autowired
     private TeamDao teamDao;
+    @Autowired
+    private MatchDao matchDao;
 
     public void importTeams() {
         for (String competitorId : COMPETITORS_LIST) {
@@ -80,8 +91,33 @@ public class MigrationUtil {
     }
 
     public void importMatchSchedule() {
+        logger.info("Match imported started");
         TournamentSchedule tournamentSchedule = restClient.getTournamentSchedule();
-        System.out.println(tournamentSchedule);
+        for (Sport_event sport_event : tournamentSchedule.getSport_events()) {
+            if (matchDao.findByExternalId(sport_event.getId()) != null) {
+                logger.info("Skipping already imported match: " + sport_event.getId());
+                continue;
+            }
+            Match match = new Match();
+            match.setExternalId(sport_event.getId());
+            try {
+                match.setMatchTime(ConstantManager.SPORT_RADAR_DATE_FORMAT.parse(sport_event.getScheduled()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            match.setRound(sport_event.getTournament_round().getNumber());
+            for (Competitor competitor : sport_event.getCompetitors()) {
+                Team team = teamDao.findByExternalId(competitor.getId());
+                if (competitor.getQualifier().equals("home")) {
+                    match.setHomeTeam(team);
+                } else {
+                    match.setGuestTeam(team);
+                }
+            }
+            matchDao.save(match);
+            logger.info("Match successfully imported: " + sport_event.getId());
+        }
+        logger.info("Match imported finished");
     }
 
 }

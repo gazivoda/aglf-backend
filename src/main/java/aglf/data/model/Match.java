@@ -1,7 +1,10 @@
 package aglf.data.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -26,6 +29,12 @@ public class Match implements Serializable {
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date matchTime;
+    @Size(max = 255)
+    @Column(name = "external_id")
+    private String externalId;
+    @Column(name = "round")
+    private Integer round;
+
 
     public Long getId() {
         return id;
@@ -73,6 +82,22 @@ public class Match implements Serializable {
 
     public void setMatchTime(Date matchTime) {
         this.matchTime = matchTime;
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
+    public Integer getRound() {
+        return round;
+    }
+
+    public void setRound(Integer round) {
+        this.round = round;
     }
 
     @Override

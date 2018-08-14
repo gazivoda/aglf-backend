@@ -5,4 +5,6 @@ import aglf.data.model.Team;
 
 public interface TeamDao extends AbstractDao<Long, Team> {
 
+    Team findByExternalId(String externalId);
+
 }
