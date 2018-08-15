@@ -93,11 +93,13 @@ public class MigrationUtil {
     public void importMatchSchedule() {
         logger.info("Match imported started");
         TournamentSchedule tournamentSchedule = restClient.getTournamentSchedule();
+        int counter = 0;
         for (Sport_event sport_event : tournamentSchedule.getSport_events()) {
             if (matchDao.findByExternalId(sport_event.getId()) != null) {
-                logger.info("Skipping already imported match: " + sport_event.getId());
                 continue;
             }
+            counter++;
+
             Match match = new Match();
             match.setExternalId(sport_event.getId());
             try {
@@ -117,7 +119,7 @@ public class MigrationUtil {
             matchDao.save(match);
             logger.info("Match successfully imported: " + sport_event.getId());
         }
-        logger.info("Match imported finished");
+        logger.info("Match imported finished. New imported matches count: " + counter);
     }
 
 }
