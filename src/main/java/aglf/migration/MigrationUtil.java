@@ -5,6 +5,7 @@ import aglf.data.dao.TeamDao;
 import aglf.data.model.Match;
 import aglf.data.model.Team;
 import aglf.service.RestClient;
+import aglf.service.dto.restmapping.matchlineups.MatchLineups;
 import aglf.service.dto.restmapping.team.Player;
 import aglf.service.dto.restmapping.team.TeamProfile;
 import aglf.service.dto.restmapping.tournamentschedule.Competitor;
@@ -120,6 +121,13 @@ public class MigrationUtil {
             logger.info("Match successfully imported: " + sport_event.getId());
         }
         logger.info("Match imported finished. New imported matches count: " + counter);
+    }
+
+    public void updateMatchData() {
+//        MatchSummary matchSummary = restClient.getMatchSummary("sr:match:12298056");
+//        logger.info("MatchSummary: " + matchSummary.toString());
+        MatchLineups matchLineups = restClient.getMatchLineups("sr:match:12298056");
+        logger.info("MatchLineups: " + matchLineups.toString());
     }
 
 }

@@ -1,14 +1,11 @@
 package aglf.rest;
 
 import aglf.migration.MigrationUtil;
-import aglf.service.PlayerService;
-import aglf.service.dto.PlayerDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 
 @Path("/migration")
 @Produces(MediaType.APPLICATION_JSON)
@@ -37,5 +34,15 @@ public class MigrationRest {
 //        }
 //        migrationUtil.importTeams();
 //    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path("/test")
+    public void test(@QueryParam("pass") String pass) {
+        if (!pass.equals("aglf0202IP")) {
+            throw new WebApplicationException("Odjebi");
+        }
+        migrationUtil.updateMatchData();
+    }
 
 }

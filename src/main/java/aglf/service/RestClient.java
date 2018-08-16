@@ -1,5 +1,7 @@
 package aglf.service;
 
+import aglf.service.dto.restmapping.matchlineups.MatchLineups;
+import aglf.service.dto.restmapping.matchsummary.MatchSummary;
 import aglf.service.dto.restmapping.team.TeamProfile;
 import aglf.service.dto.restmapping.tournamentschedule.TournamentSchedule;
 import com.google.gson.Gson;
@@ -51,6 +53,18 @@ public class RestClient {
     public TeamProfile getTeamProfile(String competitorId) {
         String result = get(API_HOST + "soccer-t3/as/en/teams/" + competitorId + "/profile.json?api_key=" + API_KEY);
         return new Gson().fromJson(result, TeamProfile.class);
+    }
+
+    public MatchSummary getMatchSummary(String matchId) {
+        // https://api.sportradar.us/soccer-t3/as/en/matches/sr:match:12298056/summary.json?api_key=wv59dfffj5q5shz2k3zctjmt
+        String result = get(API_HOST + "soccer-t3/as/en/matches/" + matchId + "/summary.json?api_key=" + API_KEY);
+        return new Gson().fromJson(result, MatchSummary.class);
+    }
+
+    public MatchLineups getMatchLineups(String matchId) {
+        // https://api.sportradar.us/soccer-t3/as/en/matches/sr:match:12298056/lineups.json?api_key=wv59dfffj5q5shz2k3zctjmt
+        String result = get(API_HOST + "soccer-t3/as/en/matches/" + matchId + "/lineups.json?api_key=" + API_KEY);
+        return new Gson().fromJson(result, MatchLineups.class);
     }
 
 }
