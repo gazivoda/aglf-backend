@@ -54,7 +54,7 @@ public class User implements Serializable {
     @Column(name = "password_value")
     private String passwordValue;
     @Column(name = "score", nullable = false)
-    private Double score = 0d;
+    private Integer score = 0;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<UserPlayer> userPlayers;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
@@ -140,11 +140,11 @@ public class User implements Serializable {
         return serialVersionUID;
     }
 
-    public Double getScore() {
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(Double score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 
@@ -181,4 +181,7 @@ public class User implements Serializable {
         return "DAO.User[ id=" + id + " ]";
     }
 
+    public void addScore(int score) {
+        this.score += score;
+    }
 }

@@ -1,11 +1,12 @@
 package aglf.migration;
 
-import aglf.data.dao.MatchDao;
-import aglf.data.dao.TeamDao;
-import aglf.data.model.Match;
-import aglf.data.model.Team;
+import aglf.data.dao.*;
+import aglf.data.model.*;
 import aglf.service.RestClient;
+import aglf.service.dto.restmapping.matchlineups.Lineup;
 import aglf.service.dto.restmapping.matchlineups.MatchLineups;
+import aglf.service.dto.restmapping.matchlineups.Starting_lineup;
+import aglf.service.dto.restmapping.matchsummary.MatchSummary;
 import aglf.service.dto.restmapping.team.Player;
 import aglf.service.dto.restmapping.team.TeamProfile;
 import aglf.service.dto.restmapping.tournamentschedule.Competitor;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -37,15 +39,18 @@ public class MigrationUtil {
     private TeamDao teamDao;
     @Autowired
     private MatchDao matchDao;
+    @Autowired
+    private PlayerDao playerDao;
+    @Autowired
+    private MatchPlayerStatDao matchPlayerStatDao;
+    @Autowired
+    private UserPlayerDao userPlayerDao;
+    @Autowired
+    private ScoreHistoryDao scoreHistoryDao;
 
     public void importTeams() {
         for (String competitorId : COMPETITORS_LIST) {
-            // sleep to cool off rest
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            coolOffRest(5000);
             TeamProfile teamProfile = restClient.getTeamProfile(competitorId);
             Team team = new Team();
             team.setExternalId(teamProfile.getTeam().getId());
@@ -87,8 +92,15 @@ public class MigrationUtil {
             }
             teamDao.save(team);
         }
+    }
 
-
+    private void coolOffRest(int durration) {
+        // sleep to cool off rest
+        try {
+            Thread.sleep(durration);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void importMatchSchedule() {
@@ -123,11 +135,120 @@ public class MigrationUtil {
         logger.info("Match imported finished. New imported matches count: " + counter);
     }
 
-    public void updateMatchData() {
-//        MatchSummary matchSummary = restClient.getMatchSummary("sr:match:12298056");
-//        logger.info("MatchSummary: " + matchSummary.toString());
-        MatchLineups matchLineups = restClient.getMatchLineups("sr:match:12298056");
-        logger.info("MatchLineups: " + matchLineups.toString());
+    public void updateMatchData(String matchId) {
+        // Get initial data
+        MatchSummary matchSummary = restClient.getMatchSummary(matchId);
+        coolOffRest(5000);
+        MatchLineups matchLineups = restClient.getMatchLineups(matchId);
+
+        Match match = matchDao.findByExternalId(matchId);
+        if (match == null) {
+            throw new IllegalStateException("Match not found");
+        }
+        match.setGuestTeamScore(matchSummary.getSport_event_status().getAway_score());
+        match.setHomeTeamScore(matchSummary.getSport_event_status().getHome_score());
+
+        Date now = new Date();
+
+        // Import stat and calculate score
+        for (aglf.service.dto.restmapping.matchsummary.Team team : matchSummary.getStatistics().getTeams()) {
+            for (aglf.service.dto.restmapping.matchsummary.Player playerStat : team.getPlayers()) {
+                MatchPlayerStat matchPlayerStat = new MatchPlayerStat();
+
+
+                aglf.data.model.Player player = playerDao.findByExternalId(playerStat.getId());
+                if (player == null) {
+                    logger.info("Player not found, skipping score calculation. Player id: " + playerStat.getId());
+                    continue;
+                }
+                // set initial data
+                matchPlayerStat.setMatch(match);
+                matchPlayerStat.setPlayer(player);
+
+                // set stat data
+                boolean isPlayerStarter = isPlayerStarter(matchLineups, playerStat);
+                matchPlayerStat.setStarter(isPlayerStarter);
+                // this is all data we can get from this rest
+                matchPlayerStat.setSubstitutedIn(getBooleanValue(playerStat.getSubstituted_in()));
+                matchPlayerStat.setSubstitutedOut(getBooleanValue(playerStat.getSubstituted_out()));
+                matchPlayerStat.setAssists(playerStat.getAssists());
+                matchPlayerStat.setGoalsScored(playerStat.getGoals_scored());
+                matchPlayerStat.setYellowCards(playerStat.getYellow_cards());
+                matchPlayerStat.setYellowRedCards(playerStat.getYellow_red_cards());
+                matchPlayerStat.setRedCards(playerStat.getRed_cards());
+
+                // calculate score
+                int score = 0;
+                // playing 90min (because we dont have data for 60min)
+                if (isPlayerStarter && !matchPlayerStat.getSubstitutedOut()) {
+                    score += 2;
+                }
+                // playing up to 90 min
+                if ((isPlayerStarter && matchPlayerStat.getSubstitutedOut()) || (!isPlayerStarter && matchPlayerStat.getSubstitutedOut())) {
+                    score += 1;
+                }
+                // scoring a goal
+                switch (player.getPosition()) {
+                    case MIDFILDER:
+                        score += matchPlayerStat.getGoalsScored() * 5;
+                        break;
+                    case STRIKER:
+                        score += matchPlayerStat.getGoalsScored() * 4;
+                        break;
+                    // for goalkeeper and defender
+                    default:
+                        score += matchPlayerStat.getGoalsScored() * 6;
+                        break;
+                }
+                // making an assist
+                score += matchPlayerStat.getAssists();
+                // yellow card
+                if (matchPlayerStat.getYellowCards() == 1) {
+                    score -= 1;
+                }
+                // red card
+                if (matchPlayerStat.getYellowRedCards() == 1 || matchPlayerStat.getRedCards() == 1) {
+                    score -= 3;
+                }
+                // own goal
+                score -= matchPlayerStat.getOwnGoals() * 2;
+
+                // save score
+                matchPlayerStat.setScore(score);
+                matchPlayerStatDao.save(matchPlayerStat);
+
+                // update score for all players
+                List<UserPlayer> userPlayerList = userPlayerDao.findAllActivePlayers(player);
+                if (userPlayerList != null && !userPlayerList.isEmpty()) {
+                    for (UserPlayer userPlayer : userPlayerList) {
+                        // add score to player
+                        userPlayer.getUser().addScore(score);
+                        // save score history
+                        ScoreHistory scoreHistory = new ScoreHistory();
+                        scoreHistory.setScore(score);
+                        scoreHistory.setDatum(now);
+                        scoreHistory.setMatchPlayerStat(matchPlayerStat);
+                        scoreHistory.setUser(userPlayer.getUser());
+                        scoreHistoryDao.save(scoreHistory);
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean isPlayerStarter(MatchLineups matchLineups, aglf.service.dto.restmapping.matchsummary.Player player) {
+        for (Lineup lineup : matchLineups.getLineups()) {
+            for (Starting_lineup starting_lineup : lineup.getStarting_lineup()) {
+                if (starting_lineup.getId() != null && starting_lineup.getId().equals(player.getId())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean getBooleanValue(Integer value) {
+        return value != null && value == 1;
     }
 
 }

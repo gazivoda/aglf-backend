@@ -21,7 +21,7 @@ public class MatchPlayerStat implements Serializable {
     @Column(name = "calculated", nullable = false)
     private boolean calculated;
     @Column(name = "score")
-    private Double score;
+    private Integer score;
 
     // FIELDS FED FROM API
     @Column(name = "assists")
@@ -100,6 +100,8 @@ public class MatchPlayerStat implements Serializable {
     private Boolean substitutedIn;
     @Column(name = "substituted_out")
     private Boolean substitutedOut;
+    @Column(name = "starter")
+    private Boolean starter;
     @Column(name = "was_fouled")
     private Boolean wasFouled;
     @Column(name = "yellow_cards")
@@ -139,11 +141,11 @@ public class MatchPlayerStat implements Serializable {
         this.calculated = calculated;
     }
 
-    public Double getScore() {
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(Double score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 
@@ -473,6 +475,14 @@ public class MatchPlayerStat implements Serializable {
 
     public void setYellowRedCards(Integer yellowRedCards) {
         this.yellowRedCards = yellowRedCards;
+    }
+
+    public Boolean getStarter() {
+        return starter;
+    }
+
+    public void setStarter(Boolean starter) {
+        this.starter = starter;
     }
 
     @Override

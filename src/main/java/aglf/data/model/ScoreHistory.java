@@ -23,7 +23,7 @@ public class ScoreHistory implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date datum;
     @Column(name = "score")
-    private Double score;
+    private Integer score;
 
     public Long getId() {
         return id;
@@ -57,11 +57,11 @@ public class ScoreHistory implements Serializable {
         this.datum = datum;
     }
 
-    public Double getScore() {
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(Double score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 

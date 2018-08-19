@@ -5,4 +5,6 @@ import aglf.data.model.Player;
 
 public interface PlayerDao extends AbstractDao<Long, Player> {
 
+    Player findByExternalId(String externalId);
+
 }

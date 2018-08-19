@@ -21,7 +21,7 @@ public class Player {
     @SerializedName("goals_scored")
     @Expose
     private Integer goals_scored;
-    @SerializedName("assists")
+    @SerializedName("goals_conceded")
     @Expose
     private Integer assists;
     @SerializedName("own_goals")
