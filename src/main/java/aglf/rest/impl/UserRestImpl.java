@@ -3,6 +3,8 @@ package aglf.rest.impl;
 import aglf.rest.UserRest;
 import aglf.service.UserService;
 import aglf.service.dto.CreateUserDto;
+import aglf.service.dto.UserAndPassDto;
+import aglf.service.dto.UserTokenDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,14 +15,14 @@ public class UserRestImpl implements UserRest {
     private UserService userService;
 
     @Override
-    public String login(String username, String password) {
-        return userService.login(username, password);
+    public UserTokenDto login(UserAndPassDto dto) {
+        return new UserTokenDto(userService.login(dto.getUsername(), dto.getPassword()));
     }
 
     @Override
-    public String signUp(CreateUserDto createUserDto) {
+    public UserTokenDto signUp(CreateUserDto createUserDto) {
         userService.createUser(createUserDto);
-        return userService.login(createUserDto.getUsername(), createUserDto.getPassword());
+        return new UserTokenDto(userService.login(createUserDto.getUsername(), createUserDto.getPassword()));
     }
 
 }
