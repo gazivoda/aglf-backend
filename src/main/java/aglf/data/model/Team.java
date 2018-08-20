@@ -39,6 +39,8 @@ public class Team implements Serializable {
     private String abbreviation;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "team", orphanRemoval = true)
     private List<Player> players = new ArrayList<>();
+    @Column(name = "jersey_url")
+    private String jerseyUrl;
 
     public Long getId() {
         return id;
@@ -110,6 +112,14 @@ public class Team implements Serializable {
 
     public void setAbbreviation(String abbreviation) {
         this.abbreviation = abbreviation;
+    }
+
+    public String getJerseyUrl() {
+        return jerseyUrl;
+    }
+
+    public void setJerseyUrl(String jerseyUrl) {
+        this.jerseyUrl = jerseyUrl;
     }
 
     @Override

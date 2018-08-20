@@ -11,6 +11,7 @@ public class PlayerDto {
     private Integer price;
     private String teamName;
     private Long teamId;
+    private String jerseyUrl;
     private Boolean active;
     private Boolean captain;
     private Boolean viceCaptain;
@@ -95,4 +96,11 @@ public class PlayerDto {
         this.viceCaptain = viceCaptain;
     }
 
+    public String getJerseyUrl() {
+        return jerseyUrl;
+    }
+
+    public void setJerseyUrl(String jerseyUrl) {
+        this.jerseyUrl = jerseyUrl;
+    }
 }

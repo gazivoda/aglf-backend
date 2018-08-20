@@ -14,6 +14,7 @@ public class PlayerAssembler {
         dto.setPosition(player.getPosition());
         dto.setTeamName(player.getTeam().getName());
         dto.setTeamId(player.getTeam().getId());
+        dto.setJerseyUrl(player.getTeam().getJerseyUrl());
         dto.setPrice(player.getPrice());
         return dto;
     }
@@ -26,6 +27,7 @@ public class PlayerAssembler {
         dto.setPosition(userPlayer.getPlayer().getPosition());
         dto.setTeamName(userPlayer.getPlayer().getTeam().getName());
         dto.setTeamId(userPlayer.getPlayer().getTeam().getId());
+        dto.setJerseyUrl(userPlayer.getPlayer().getTeam().getJerseyUrl());
         dto.setPrice(userPlayer.getPlayer().getPrice());
         dto.setActive(userPlayer.isActive());
         dto.setCaptain(userPlayer.isCaptain());
