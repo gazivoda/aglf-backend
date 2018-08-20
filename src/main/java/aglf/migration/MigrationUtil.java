@@ -221,11 +221,16 @@ public class MigrationUtil {
                 List<UserPlayer> userPlayerList = userPlayerDao.findAllActivePlayers(player);
                 if (userPlayerList != null && !userPlayerList.isEmpty()) {
                     for (UserPlayer userPlayer : userPlayerList) {
+                        // double score for captain
+                        int playerScore = score;
+                        if (userPlayer.isCaptain()) {
+                            playerScore = playerScore * 2;
+                        }
                         // add score to player
-                        userPlayer.getUser().addScore(score);
+                        userPlayer.getUser().addScore(playerScore);
                         // save score history
                         ScoreHistory scoreHistory = new ScoreHistory();
-                        scoreHistory.setScore(score);
+                        scoreHistory.setScore(playerScore);
                         scoreHistory.setDatum(now);
                         scoreHistory.setMatchPlayerStat(matchPlayerStat);
                         scoreHistory.setUser(userPlayer.getUser());
