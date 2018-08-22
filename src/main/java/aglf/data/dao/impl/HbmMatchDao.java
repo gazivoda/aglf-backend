@@ -6,6 +6,9 @@ import aglf.data.model.Match;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+import java.util.List;
+
 
 @Repository
 public class HbmMatchDao extends HbmGenericDaoBase<Long, Match> implements MatchDao {
@@ -20,5 +23,13 @@ public class HbmMatchDao extends HbmGenericDaoBase<Long, Match> implements Match
         Query query = getSession().createQuery(hql);
         query.setString("externalId", externalId);
         return (Match) query.uniqueResult();
+    }
+
+    @Override
+    public List<Match> findAllForScoring() {
+        String hql = "from Match where calculated = false and date < :date";
+        Query query = getSession().createQuery(hql);
+        query.setDate("date", new Date());
+        return query.list();
     }
 }

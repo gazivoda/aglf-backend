@@ -19,5 +19,9 @@ public class Scheduler {
         migrationUtil.importMatchSchedule();
     }
 
-    // TODO create scheduler for updateMatchData()
+    // SCORE MATCHES EVERY 60 MINUTES
+    @Scheduled(fixedRate = 60*60*1000)
+    public void scoreMatch() {
+        migrationUtil.startMatchScoring();
+    }
 }

@@ -42,7 +42,7 @@ public class MigrationRest {
         if (!pass.equals("aglf0202IP")) {
             throw new WebApplicationException("Odjebi");
         }
-        migrationUtil.updateMatchData("blahblah");
+        migrationUtil.scoreMatch("blahblah");
     }
 
 }

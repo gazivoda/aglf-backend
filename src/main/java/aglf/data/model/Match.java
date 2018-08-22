@@ -3,8 +3,6 @@ package aglf.data.model;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -34,6 +32,8 @@ public class Match implements Serializable {
     private String externalId;
     @Column(name = "round")
     private Integer round;
+    @Column(name = "calculated", nullable = false)
+    private boolean calculated;
 
 
     public Long getId() {
@@ -98,6 +98,14 @@ public class Match implements Serializable {
 
     public void setRound(Integer round) {
         this.round = round;
+    }
+
+    public boolean isCalculated() {
+        return calculated;
+    }
+
+    public void setCalculated(boolean calculated) {
+        this.calculated = calculated;
     }
 
     @Override
