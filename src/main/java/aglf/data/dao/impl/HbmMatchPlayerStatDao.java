@@ -22,4 +22,11 @@ public class HbmMatchPlayerStatDao extends HbmGenericDaoBase<Long, MatchPlayerSt
         query.setEntity("match", match);
         return (MatchPlayerStat) query.list();
     }
+
+    @Override
+    public Integer findLatestScoredRound() {
+        String hql = "select max(round) from Match where calculated = true";
+        Query query = getSession().createQuery(hql);
+        return (Integer) query.uniqueResult();
+    }
 }

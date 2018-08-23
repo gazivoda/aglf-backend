@@ -6,6 +6,8 @@ import aglf.data.model.User;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public class HbmUserDao extends HbmGenericDaoBase<Long, User> implements UserDao {
@@ -28,5 +30,13 @@ public class HbmUserDao extends HbmGenericDaoBase<Long, User> implements UserDao
         Query query = getSession().createQuery(hql);
         query.setString("token", authorizationToken);
         return (User) query.uniqueResult();
+    }
+
+    @Override
+    public List<User> findTopScorers(int limit) {
+        String hql = "from User order by score desc ";
+        Query query = getSession().createQuery(hql);
+        query.setMaxResults(limit);
+        return query.list();
     }
 }

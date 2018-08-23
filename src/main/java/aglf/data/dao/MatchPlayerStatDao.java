@@ -8,4 +8,5 @@ public interface MatchPlayerStatDao extends AbstractDao<Long, MatchPlayerStat> {
 
     MatchPlayerStat findByMatch(Match match);
 
+    Integer findLatestScoredRound();
 }

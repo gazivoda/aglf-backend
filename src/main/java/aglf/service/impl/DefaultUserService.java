@@ -2,17 +2,23 @@ package aglf.service.impl;
 
 import aglf.data.dao.UserDao;
 import aglf.data.model.User;
+import aglf.rest.filter.CustomAutentication;
+import aglf.service.PlayerService;
 import aglf.service.UserService;
 import aglf.service.dto.CreateUserDto;
+import aglf.service.dto.UserDetailsDto;
 import aglf.util.Encryption;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.WebApplicationException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional
@@ -22,6 +28,8 @@ public class DefaultUserService implements UserService {
 
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private PlayerService playerService;
 
     @Override
     public String login(String username, String password) {
@@ -67,13 +75,37 @@ public class DefaultUserService implements UserService {
         userDao.save(user);
     }
 
-    private User saveUser(CreateUserDto createUserDto, Long userType) {
-        User user = new User();
-        user.setUsername(createUserDto.getUsername());
-        user.setPassword(Encryption.getMD5(createUserDto.getPassword()));
-        user.setPasswordValue(createUserDto.getPassword());
-        userDao.save(user);
-        return user;
+    @Override
+    public UserDetailsDto getUserDetails(Long userId) {
+        if (userId == null) {
+            userId = ((CustomAutentication) SecurityContextHolder.getContext().getAuthentication()).getPrincipal().getUserId();
+        }
+        User user = userDao.findById(userId);
+        if (user == null) {
+            throw new WebApplicationException("User not found");
+        }
+        return assembleDto(user);
+    }
+
+    @Override
+    public List<UserDetailsDto> getTopUsers() {
+        List<User> topUsers = userDao.findTopScorers(10);
+        List<UserDetailsDto> dtoList = new ArrayList<>();
+        if (topUsers != null && !topUsers.isEmpty()) {
+            for (User topUser : topUsers) {
+                dtoList.add(assembleDto(topUser));
+            }
+        }
+        return dtoList;
+    }
+
+    private UserDetailsDto assembleDto(User user) {
+        UserDetailsDto dto = new UserDetailsDto();
+        dto.setUserId(user.getId());
+        dto.setUserName(user.getUsername());
+        dto.setScore(user.getScore());
+        dto.setPlayers(playerService.getTeam(user.getId()));
+        return dto;
     }
 
 }

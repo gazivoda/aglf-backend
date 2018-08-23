@@ -2,6 +2,9 @@ package aglf.service;
 
 import aglf.data.model.User;
 import aglf.service.dto.CreateUserDto;
+import aglf.service.dto.UserDetailsDto;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -10,4 +13,9 @@ public interface UserService {
     User findUserByToken(String authorizationToken);
 
     void createUser(CreateUserDto createUserDto);
+
+    UserDetailsDto getUserDetails(Long userId);
+
+    List<UserDetailsDto> getTopUsers();
+
 }

@@ -1,5 +1,6 @@
 package aglf.service;
 
+import aglf.data.dao.MatchPlayerStatDao;
 import aglf.data.dao.PlayerDao;
 import aglf.data.dao.UserDao;
 import aglf.data.model.User;
@@ -7,6 +8,7 @@ import aglf.data.model.UserPlayer;
 import aglf.rest.filter.CustomAutentication;
 import aglf.service.assembler.PlayerAssembler;
 import aglf.service.dto.PlayerDto;
+import aglf.service.dto.TopPlayersDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ public class PlayerService {
     private PlayerDao playerDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private MatchPlayerStatDao matchPlayerStatDao;
 
     public List<PlayerDto> findAllPlayers() {
         return playerDao.findAll().stream().map(PlayerAssembler::getPlayerDto).collect(Collectors.toList());
@@ -61,5 +65,20 @@ public class PlayerService {
             throw new WebApplicationException("User not found");
         }
         return user.getUserPlayers().stream().map(PlayerAssembler::getPlayerDto).collect(Collectors.toList());
+    }
+
+    public List<TopPlayersDto> getTopPlayers() {
+        return playerDao.getTopPlayers();
+    }
+
+    public List<TopPlayersDto> getTopPlayersPerRound(Integer round) {
+        if (round == null) {
+            // find latest scored round
+            round = matchPlayerStatDao.findLatestScoredRound();
+        }
+        if (round == null) {
+            return null;
+        }
+        return playerDao.getTopPlayersPerRound(round);
     }
 }

@@ -2,6 +2,7 @@ package aglf.rest;
 
 import aglf.service.PlayerService;
 import aglf.service.dto.PlayerDto;
+import aglf.service.dto.TopPlayersDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +37,20 @@ public class PlayerRest {
     @Path("/getTeam")
     public List<PlayerDto> getTeam(@QueryParam("userId") Long userId) {
         return playerService.getTeam(userId);
+    }
+
+    @GET
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path("/getTopPlayers")
+    public List<TopPlayersDto> getTopPlayers() {
+        return playerService.getTopPlayers();
+    }
+
+    @GET
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path("/getTopPlayersPerRound")
+    public List<TopPlayersDto> getTopPlayersPerRound(@QueryParam("round") Integer round) {
+        return playerService.getTopPlayersPerRound(round);
     }
 
 }
