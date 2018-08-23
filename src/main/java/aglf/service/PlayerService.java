@@ -3,6 +3,7 @@ package aglf.service;
 import aglf.data.dao.MatchPlayerStatDao;
 import aglf.data.dao.PlayerDao;
 import aglf.data.dao.UserDao;
+import aglf.data.model.Player;
 import aglf.data.model.User;
 import aglf.data.model.UserPlayer;
 import aglf.rest.filter.CustomAutentication;
@@ -38,7 +39,6 @@ public class PlayerService {
         if (user == null) {
             throw new WebApplicationException("User not found");
         }
-        // TODO validate user list
 
         user.getUserPlayers().clear();
         for (PlayerDto player : players) {
@@ -51,6 +51,23 @@ public class PlayerService {
             up.setViceCaptain(player.getViceCaptain() != null ? player.getViceCaptain() : false);
 
             user.getUserPlayers().add(up);
+
+            // validate user list
+            if (user.getUserPlayers().size() > 15) {
+                throw new WebApplicationException("Number of selected players must be 15");
+            }
+            if (user.getUserPlayers().stream().filter(userPlayer -> userPlayer.getPlayer().getPosition().equals(Player.Position.GOALKEEPER)).count() > 2) {
+                throw new WebApplicationException("Number of selected goalkeepers must be 2");
+            }
+            if (user.getUserPlayers().stream().filter(userPlayer -> userPlayer.getPlayer().getPosition().equals(Player.Position.DEFENDER)).count() > 5) {
+                throw new WebApplicationException("Number of selected defenders must be 5");
+            }
+            if (user.getUserPlayers().stream().filter(userPlayer -> userPlayer.getPlayer().getPosition().equals(Player.Position.MIDFILDER)).count() > 5) {
+                throw new WebApplicationException("Number of selected midfielders must be 5");
+            }
+            if (user.getUserPlayers().stream().filter(userPlayer -> userPlayer.getPlayer().getPosition().equals(Player.Position.STRIKER)).count() > 3) {
+                throw new WebApplicationException("Number of selected strikers must be 3");
+            }
         }
 
     }
