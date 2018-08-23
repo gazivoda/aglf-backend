@@ -35,7 +35,7 @@ public class DefaultUserService implements UserService {
     public String login(String username, String password) {
         User user = userDao.findByUsername(username);
         if (user == null) {
-            throw new WebApplicationException("Nepostojeci username");
+            throw new WebApplicationException("Non existing username");
         }
         if (user.getPassword().equals(Encryption.getMD5(password))) {
             Calendar c = Calendar.getInstance();
@@ -54,7 +54,7 @@ public class DefaultUserService implements UserService {
                 return token;
             }
         } else {
-            throw new RuntimeException("Password nije dobar");
+            throw new RuntimeException("Wrong password");
         }
     }
 
