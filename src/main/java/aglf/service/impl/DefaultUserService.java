@@ -99,6 +99,11 @@ public class DefaultUserService implements UserService {
         return dtoList;
     }
 
+    @Override
+    public List<UserDetailsDto> getProgressForUser(Long userId) {
+        return userDao.getProgressForUser(userId);
+    }
+
     private UserDetailsDto assembleDto(User user) {
         UserDetailsDto dto = new UserDetailsDto();
         dto.setUserId(user.getId());

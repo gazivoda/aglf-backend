@@ -8,6 +8,7 @@ public class UserDetailsDto {
     private Long userId;
     private String userName;
     private Integer score;
+    private Integer round;
     private List<PlayerDto> players;
 
     public Long getUserId() {
@@ -40,5 +41,13 @@ public class UserDetailsDto {
 
     public void setPlayers(List<PlayerDto> players) {
         this.players = players;
+    }
+
+    public Integer getRound() {
+        return round;
+    }
+
+    public void setRound(Integer round) {
+        this.round = round;
     }
 }

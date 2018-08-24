@@ -38,4 +38,9 @@ public class UserRestImpl implements UserRest {
         return userService.getTopUsers();
     }
 
+    @Override
+    public List<UserDetailsDto> getProgressForUser(Long userId) {
+        return userService.getProgressForUser(userId);
+    }
+
 }

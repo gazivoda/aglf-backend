@@ -33,4 +33,9 @@ public interface UserRest {
     @Path("/getTopUsers")
     List<UserDetailsDto> getTopUsers();
 
+    @GET
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path("/getProgressForUser")
+    List<UserDetailsDto> getProgressForUser(@QueryParam("userId") Long userId);
+
 }

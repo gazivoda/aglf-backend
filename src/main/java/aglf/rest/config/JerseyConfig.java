@@ -1,5 +1,6 @@
 package aglf.rest.config;
 
+import aglf.rest.MatchRest;
 import aglf.rest.MigrationRest;
 import aglf.rest.PlayerRest;
 import aglf.rest.filter.AuthorizationFilter;
@@ -18,5 +19,6 @@ public class JerseyConfig extends ResourceConfig {
         register(PlayerRest.class);
         register(MigrationRest.class);
         register(CorsFilter.class);
+        register(MatchRest.class);
     }
 }

@@ -18,4 +18,5 @@ public interface UserService {
 
     List<UserDetailsDto> getTopUsers();
 
+    List<UserDetailsDto> getProgressForUser(Long userId);
 }
