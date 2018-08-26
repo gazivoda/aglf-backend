@@ -29,6 +29,10 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext containerRequestContext) throws IOException {
 
+        if (containerRequestContext.getMethod().equals("OPTIONS")){
+            return;
+        }
+
         if (!shouldFilter(((ContainerRequest) containerRequestContext.getRequest()).getRequestUri().getPath())) {
             return;
         }
@@ -39,7 +43,6 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         if (authorizationToken == null || authorizationToken.isEmpty()) {
             throw new WebApplicationException(401);
         }
-
 
         User user = userService.findUserByToken(authorizationToken);
 
