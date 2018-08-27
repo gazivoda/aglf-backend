@@ -89,7 +89,7 @@ public class DefaultUserService implements UserService {
 
     @Override
     public List<UserDetailsDto> getTopUsers() {
-        List<User> topUsers = userDao.findTopScorers(10);
+        List<User> topUsers = userDao.findTopScorers(500);
         List<UserDetailsDto> dtoList = new ArrayList<>();
         if (topUsers != null && !topUsers.isEmpty()) {
             for (User topUser : topUsers) {
