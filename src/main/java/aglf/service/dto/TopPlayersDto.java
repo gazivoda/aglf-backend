@@ -5,8 +5,11 @@ public class TopPlayersDto {
     public Long playerId;
     public String firstName;
     public String lastName;
+    public Long teamId;
     public String teamName;
+    private String jerseyUrl;
     public Integer score;
+    public Integer price;
 
     public Long getPlayerId() {
         return playerId;
@@ -47,4 +50,29 @@ public class TopPlayersDto {
     public void setScore(Integer score) {
         this.score = score;
     }
+
+    public Long getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Long teamId) {
+        this.teamId = teamId;
+    }
+
+    public String getJerseyUrl() {
+        return jerseyUrl;
+    }
+
+    public void setJerseyUrl(String jerseyUrl) {
+        this.jerseyUrl = jerseyUrl;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
 }

@@ -35,7 +35,10 @@ public class HbmPlayerDao extends HbmGenericDaoBase<Long, Player> implements Pla
         String sql = "select p.id as playerId, " +
                 "p.first_name as firstName, " +
                 "p.last_name as lastName, " +
+                "p.price as price, " +
                 "t.`name` as teamName, " +
+                "t.id as teamId, " +
+                "t.jersey_url as jerseyUrl, " +
                 "SUM(ms.score) as score " +
                 "from pc_match_stat ms " +
                 "join pc_player p on ms.player_id = p.id " +
@@ -48,6 +51,9 @@ public class HbmPlayerDao extends HbmGenericDaoBase<Long, Player> implements Pla
         query.addScalar("lastName", StringType.INSTANCE);
         query.addScalar("teamName", StringType.INSTANCE);
         query.addScalar("score", IntegerType.INSTANCE);
+        query.addScalar("teamId", LongType.INSTANCE);
+        query.addScalar("jerseyUrl", StringType.INSTANCE);
+        query.addScalar("price", IntegerType.INSTANCE);
         query.setResultTransformer(Transformers.aliasToBean(TopPlayersDto.class));
         return query.list();
     }
@@ -57,7 +63,10 @@ public class HbmPlayerDao extends HbmGenericDaoBase<Long, Player> implements Pla
         String sql = "select p.id as playerId, " +
                 "p.first_name as firstName, " +
                 "p.last_name as lastName, " +
+                "p.price as price, " +
                 "t.`name` as teamName, " +
+                "t.id as teamId, " +
+                "t.jersey_url as jerseyUrl, " +
                 "SUM(ms.score) as score " +
                 "from pc_match_stat ms " +
                 "join pc_player p on ms.player_id = p.id " +
@@ -73,6 +82,9 @@ public class HbmPlayerDao extends HbmGenericDaoBase<Long, Player> implements Pla
         query.addScalar("teamName", StringType.INSTANCE);
         query.addScalar("score", IntegerType.INSTANCE);
         query.setInteger("round", round);
+        query.addScalar("teamId", LongType.INSTANCE);
+        query.addScalar("jerseyUrl", StringType.INSTANCE);
+        query.addScalar("price", IntegerType.INSTANCE);
         query.setResultTransformer(Transformers.aliasToBean(TopPlayersDto.class));
         return query.list();
     }
