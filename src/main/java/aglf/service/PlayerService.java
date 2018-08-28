@@ -56,6 +56,15 @@ public class PlayerService {
             if (user.getUserPlayers().size() > 15) {
                 throw new WebApplicationException("Number of selected players must be 15");
             }
+            if (user.getUserPlayers().stream().filter(UserPlayer::isActive).count() > 11) {
+                throw new WebApplicationException("Number of active players must be 11");
+            }
+            if (user.getUserPlayers().stream().filter(UserPlayer::isCaptain).count() > 1) {
+                throw new WebApplicationException("There can be only one captain");
+            }
+            if (user.getUserPlayers().stream().filter(UserPlayer::isViceCaptain).count() > 1) {
+                throw new WebApplicationException("There can be only one vice captain");
+            }
             if (user.getUserPlayers().stream().filter(userPlayer -> userPlayer.getPlayer().getPosition().equals(Player.Position.GOALKEEPER)).count() > 2) {
                 throw new WebApplicationException("Number of selected goalkeepers must be 2");
             }
