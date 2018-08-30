@@ -37,7 +37,7 @@ public class Team implements Serializable {
     @Size(max = 255)
     @Column(name = "abbreviation")
     private String abbreviation;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "team", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "team", orphanRemoval = false)
     private List<Player> players = new ArrayList<>();
     @Column(name = "jersey_url")
     private String jerseyUrl;

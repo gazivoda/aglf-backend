@@ -29,7 +29,7 @@ public class HbmMatchDao extends HbmGenericDaoBase<Long, Match> implements Match
     public List<Match> findAllForScoring() {
         String hql = "from Match where calculated = false and date < :date";
         Query query = getSession().createQuery(hql);
-        query.setDate("date", new Date());
+        query.setTimestamp("date", new Date());
         return query.list();
     }
 }

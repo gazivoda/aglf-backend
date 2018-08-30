@@ -52,7 +52,7 @@ public class MigrationUtil {
         for (String competitorId : COMPETITORS_LIST) {
             coolOffRest(5000);
             TeamProfile teamProfile = restClient.getTeamProfile(competitorId);
-            Team team = new Team();
+            Team team = teamDao.findByExternalId(competitorId);
             team.setExternalId(teamProfile.getTeam().getId());
             team.setName(teamProfile.getTeam().getName());
             team.setAbbreviation(teamProfile.getTeam().getAbbreviation());
@@ -61,8 +61,12 @@ public class MigrationUtil {
             if (teamProfile.getManager() != null) {
                 team.setManagerName(teamProfile.getManager().getName());
             }
+            team.getPlayers().clear();
             for (Player playerInfo : teamProfile.getPlayers()) {
-                aglf.data.model.Player player = new aglf.data.model.Player();
+                aglf.data.model.Player player = playerDao.findByExternalId(playerInfo.getId());
+                if (player == null) {
+                    player = new aglf.data.model.Player();
+                }
                 player.setTeam(team);
                 player.setExternalId(playerInfo.getId());
                 player.setFirstName(playerInfo.getName().split(",")[0].trim());
@@ -87,7 +91,7 @@ public class MigrationUtil {
                             break;
                     }
                 }
-                player.setPrice(new Random().nextInt(101));
+                player.setPrice(new Random().nextInt(11));
                 team.getPlayers().add(player);
             }
             teamDao.save(team);

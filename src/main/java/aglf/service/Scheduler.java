@@ -19,8 +19,14 @@ public class Scheduler {
         migrationUtil.importMatchSchedule();
     }
 
+    // IMPORT TEAM INFO AND NEW PLAYERS EVERY SUNDAY AT 23:33
+    @Scheduled(cron = "0 33 23 * * SUN")
+    public void importTeamsAndPlayers() {
+        migrationUtil.importTeams();
+    }
+
     // SCORE MATCHES EVERY 60 MINUTES
-    @Scheduled(fixedRate = 60*60*1000)
+    @Scheduled(fixedRate = 60 * 60 * 1000)
     public void scoreMatch() {
         migrationUtil.startMatchScoring();
     }

@@ -25,24 +25,24 @@ public class MigrationRest {
         migrationUtil.importMatchSchedule();
     }
 
-//    @POST
-//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//    @Path("/importTeamAndPlayers")
-//    public void importTeamAndPlayers(@QueryParam("pass") String pass) {
-//        if (!pass.equals("aglf0202IP")) {
-//            throw new WebApplicationException("Odjebi");
-//        }
-//        migrationUtil.importTeams();
-//    }
-
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Path("/test")
-    public void test(@QueryParam("pass") String pass) {
+    @Path("/importTeamAndPlayers")
+    public void importTeamAndPlayers(@QueryParam("pass") String pass) {
         if (!pass.equals("aglf0202IP")) {
             throw new WebApplicationException("Odjebi");
         }
-        migrationUtil.scoreMatch("blahblah");
+        migrationUtil.importTeams();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path("/scoreMatches")
+    public void scoreMatches(@QueryParam("pass") String pass) {
+        if (!pass.equals("aglf0202IP")) {
+            throw new WebApplicationException("Odjebi");
+        }
+        migrationUtil.startMatchScoring();
     }
 
 }
